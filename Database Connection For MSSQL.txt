@@ -1,0 +1,36 @@
+using System;
+using System.Collections.Generic;
+using System.Text;
+
+namespace LearningCenter.Database
+{
+    public static class DatabaseConfig
+    {
+        // ▼▼▼ МЕНЯТЬ: параметры подключения ▼▼▼
+        public static string Server   = "localhost";          // или "localhost\\SQLEXPRESS"
+        public static string Database = "learning_center";    // имя БД из database.sql
+
+        // Вариант 1: Windows-аутентификация (по умолчанию в SSMS) — User/Password не нужны
+        public static bool UseWindowsAuth = true;
+
+        // Вариант 2: SQL Server Authentication
+        public static string User     = "sa";
+        public static string Password = "";
+        // ▲▲▲ МЕНЯТЬ ▲▲▲
+
+        public static string ConnectionString =>
+            UseWindowsAuth
+                ? $"Server={Server};Database={Database};Integrated Security=True;TrustServerCertificate=True;"
+                : $"Server={Server};Database={Database};User Id={User};Password={Password};TrustServerCertificate=True;";
+    }
+}
+
+using Microsoft.Data.SqlClient;
+
+using (var connection = new SqlConnection(DatabaseConfig.ConnectionString))
+{
+    connection.Open();
+    // ваш код работы с БД
+}
+
+dotnet add package Microsoft.Data.SqlClient
